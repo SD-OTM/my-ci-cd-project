@@ -192,4 +192,25 @@ def generate_diff_report():
 
 
 if __name__ == "__main__":
+    import sys
+
+    # If running from PyCharm, change to the Git repo directory
+    if len(sys.argv) > 1:
+        repo_path = sys.argv[1]
+        print(f"Changing to repository: {repo_path}")
+        os.chdir(repo_path)
+
+    # Check if we're in a Git repository
+    result = subprocess.run(
+        ["git", "rev-parse", "--is-inside-work-tree"],
+        capture_output=True,
+        text=True
+    )
+
+    if result.returncode != 0:
+        print("Error: Not in a Git repository!")
+        print("Usage when testing:")
+        print('  python generate_diff.py "C:\\Users\\NITRO\\Documents\\Git\\my-ci-cd-project"')
+        sys.exit(1)
+
     generate_diff_report()
